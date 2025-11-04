@@ -19,12 +19,12 @@ def main():
     choice = input("(P)lay, (S)et limit, (H)igh scores, (Q)uit: ").upper()
     while choice != "Q":
         if choice == "P":
-            play(low, high)
+            play_game(low, high)
             number_of_games += 1
         elif choice == "S":
             high = set_limit(low)
         elif choice == "H":
-            high_scores()
+            get_high_scores()
         else:
             print("Invalid choice")
         choice = input("(P)lay, (S)et limit, (H)igh scores, (Q)uit: ").upper()
@@ -37,7 +37,7 @@ def save_score(number_of_guesses, low, high):
         print(f"{number_of_guesses}|{high - low + 1}", file=outfile)
 
 
-def play(low, high):
+def play_game(low, high):
     """Play guessing game using current low and high values."""
     secret = random.randint(low, high)
     number_of_guesses = 1
@@ -50,7 +50,7 @@ def play(low, high):
             print("Lower")
         guess = int(input(f"Guess a number between {low} and {high}: "))
     print(f"You got it in {number_of_guesses} guesses.")
-    if good_score(number_of_guesses, high - low + 1):
+    if is_good_score(number_of_guesses, high - low + 1):
         print("Good guessing!")
     else:
         pass
@@ -83,12 +83,12 @@ def get_valid_number(prompt):
     return number
 
 
-def good_score(number_of_guesses, range_):
+def is_good_score(number_of_guesses, range_):
     """Return boolean on if score is good."""
     return number_of_guesses <= math.ceil(math.log2(range_))
 
 
-def high_scores():
+def get_high_scores():
     """Open scores and mark if they are good."""
     scores = []
     with open("scores.txt", "r", encoding="utf-8-sig") as in_file:
@@ -97,7 +97,7 @@ def high_scores():
             scores.append((int(line[0]), int(line[1])))
     scores.sort()
     for score in scores:
-        marker = "!" if good_score(score[0], score[1]) else ""
+        marker = "!" if is_good_score(score[0], score[1]) else ""
         print(f"{score[0]} ({score[1]}) {marker}")
 
 
